@@ -26,7 +26,7 @@ public class Game extends PApplet {
     private HashMap<String, PImage> assets;
     private TileMap tileMap;
     public static GameAlgoritm gameAlgoritm;
-    private TextController textController;
+    private UIController uiController;
     private boolean nextLevel;
     private boolean gameOver;
 
@@ -59,20 +59,24 @@ public class Game extends PApplet {
         assets.put("elfo", loadImage("assets/0x72_DungeonTilesetII_v1.3.1/frames/elf_m_idle_anim_f1.png"));
         assets.put("goblin", loadImage("assets/0x72_DungeonTilesetII_v1.3.1/frames/goblin_idle_anim_f0.png"));
         assets.put("door", loadImage("assets/0x72_DungeonTilesetII_v1.3.1/frames/doors_leaf_closed.png"));
-        assets.put("floor1", loadImage("assets/0x72_DungeonTilesetII_v1.3.1/frames/floor_1.png"));
+        assets.put("floor", loadImage("assets/0x72_DungeonTilesetII_v1.3.1/frames/floor_1.png"));
         assets.put("floor2", loadImage("assets/0x72_DungeonTilesetII_v1.3.1/frames/floor_2.png"));
         assets.put("wall", loadImage("assets/0x72_DungeonTilesetII_v1.3.1/frames/wall_mid.png"));
         assets.put("flask red", loadImage("assets/0x72_DungeonTilesetII_v1.3.1/frames/flask_big_red.png"));
         assets.put("flask green", loadImage("assets/0x72_DungeonTilesetII_v1.3.1/frames/flask_big_green.png"));
-        assets.put("heart", loadImage("assets/0x72_DungeonTilesetII_v1.3.1/frames/ui_heart_full.png"));
+        assets.put("heart full", loadImage("assets/0x72_DungeonTilesetII_v1.3.1/frames/ui_heart_full.png"));
+        assets.put("heart half", loadImage("assets/0x72_DungeonTilesetII_v1.3.1/frames/ui_heart_half.png"));
+        assets.put("heart empty", loadImage("assets/0x72_DungeonTilesetII_v1.3.1/frames/ui_heart_empty.png"));
 
         assets.put("chest", loadImage("assets/0x72_DungeonTilesetII_v1.3.1/frames/chest_empty_open_anim_f0.png"));
-        gameAlgoritm = new GameAlgoritm();
-        NPCs = new ArrayList<>();
-        NPCs.add(new Demon(new PVector(gameAlgoritm.nextInt(50), gameAlgoritm.nextInt(40)), assets));
-        NPCs.add(new Chort(new PVector(gameAlgoritm.nextInt(50), gameAlgoritm.nextInt(40)), assets));
+        gameAlgoritm = new GameAlgoritm(this);
         tileMap = new TileMap(this);
-        textController = new TextController(this);
+        uiController = new UIController(this);
+
+        NPCs = new ArrayList<>();
+        NPCs.add(new Demon(gameAlgoritm.randomNCPpos(), assets));
+        NPCs.add(new Chort(gameAlgoritm.randomNCPpos(), assets));
+
         hero = new Player(new PVector(cols / 2, rows / 2), assets);
     }
 
@@ -80,6 +84,7 @@ public class Game extends PApplet {
     public void draw() {
         if (!gameOver) {
             if(!nextLevel) {
+
                 tileMap.draw();
                 hero.draw(getGraphics());
                 //System.out.printf("hero ->(%.2f, %.2f)\n", hero.getPos().x, hero.getPos().y);
@@ -90,13 +95,14 @@ public class Game extends PApplet {
                 }
                 checkEnegy();
                 checkDoor();
+                uiController.heroHealth();
             } else {
                 // schermata di next level
-                textController.nextLevel();
+                uiController.nextLevel();
             }
         } else {
             // schermata di game over
-                textController.GameOver();
+                uiController.GameOver();
 
         }
     }

@@ -44,7 +44,4 @@ public class Player extends Entity {
         haveKey = true;
     }
 
-    public boolean isHaveKey() {
-        return haveKey;
-    }
 }

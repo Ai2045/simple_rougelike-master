@@ -15,12 +15,18 @@ public abstract class Entity {
     protected int frame;
     protected int orderAssets;
     protected float energy;
+    protected float maxEnergy;
 
+
+    public float getMaxEnergy() {
+        return maxEnergy;
+    }
 
     public Entity(PVector pos, HashMap<String, PImage> assets) {
         this.pos = pos;
         this.assets = assets;
         energy = 100.0f;
+        maxEnergy = energy;
     }
 
     public PVector getPos() {

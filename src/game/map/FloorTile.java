@@ -3,6 +3,7 @@ package game.map;
 import game.Game;
 import processing.core.PGraphics;
 import processing.core.PImage;
+import processing.core.PVector;
 
 public class FloorTile extends Tile{
 
@@ -17,4 +18,5 @@ public class FloorTile extends Tile{
     public void draw(int row, int col) {
         gfx.image(floorImage, col*tileSize, row*tileSize);
     }
+
 }
