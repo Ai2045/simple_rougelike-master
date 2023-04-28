@@ -16,9 +16,23 @@ public class UIController {
     public UIController(Game game) {
         this.game = game;
         gfx = game.getGraphics();
+        numHearts = 5;
         assets = game.getAssets();
+        initHearts();
     }
 
+    public void initHearts() {
+        if (healthImages.size() == 0) {
+            for(int i=0; i<numHearts; i++) {
+                healthImages.add(assets.get("heart full"));
+            }
+        }else {
+            for(int i=0; i<numHearts; i++) {
+                healthImages.set(i,assets.get("heart full"));
+            }
+        }
+
+    }
     public void nextLevel() {
         gfx.textSize(32);
         gfx.textAlign(Game.CENTER);
@@ -35,35 +49,25 @@ public class UIController {
         gfx.text("Premi R per riprovare o ESC per uscire", gfx.width / 2, gfx.height / 2 + 40);
     }
 
-    public UIController() {
-        numHearts = 5;
-        assets = game.getAssets();
-        for (int i = 0; i < numHearts; i++) {
-            healthImages.add(assets.get("health full"));
-        }
-    }
 
     public void heroHealth() {
-       var hero = game.getHero();
-        var healthPerHeart = hero.getEnergy()/ hero.getMaxEnergy();
-        for(int i=0; i<numHearts; i++) {
-            if (hero.getEnergy() < (i + 1) * healthPerHeart) {
+        var hero = game.getHero();
+        var healthPerHeart = hero.getMaxEnergy()/numHearts;
+        for(int i=numHearts-1; i>=0; i--) {
+            if (hero.getEnergy() < (i) * healthPerHeart) {
                 // L'eroe ha meno salute di quella rappresentata da questo cuore
-                healthImages.set(i, assets.get("health empty"));
-            } else {
-                // L'eroe ha abbastanza salute per questo cuore
-                healthImages.set(i, assets.get("health full"));
+                healthImages.set(i, assets.get("heart empty"));
             }
         }
         drawHealth();
+
     }
 
-    public void drawHealth() {
-        for (var image:
-             healthImages) {
-            gfx.image(image, 2*Game.tileSize, 2*Game.tileSize);
+    private void drawHealth() {
+        for (int i = 0; i < healthImages.size(); i++) {
+            healthImages.get(i).resize(Game.tileSize*2, Game.tileSize*2);
+            gfx.image(healthImages.get(i), i*Game.tileSize*2, 5);
         }
-        gfx.textAlign(Game.X);
-        gfx.text("health", 2*Game.tileSize, 2*Game.tileSize);
     }
+
 }

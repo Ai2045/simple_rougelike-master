@@ -37,67 +37,70 @@ public class TileMap {
         initItem(random);
         initDoor(random);
         initKey(random);
-}
-private void initItem(GameAlgoritm random) {
-    for (int r = 0; r < rows; r++) {
-        for (int c = 0; c < cols; c++) {
-            var floor = tiles[r][c];
-            if (floor instanceof FloorTile) {
-                if (random.nextInt(1000) < 5) floor.setItem(new BuffPotion(gfx, assets.get("flask red")));
-                if (random.nextInt(1000) < 5) floor.setItem(new BuffPotion(gfx, assets.get("flask green")));
-            }
+    }
+    private void initItem(GameAlgoritm random) {
+        for (int r = 0; r < rows; r++) {
+            for (int c = 0; c < cols; c++) {
+                var floor = tiles[r][c];
+                if (floor instanceof FloorTile) {
+                    if (random.nextInt(1000) < 5) floor.setItem(new DebuffPotion(gfx, assets.get("flask red")));
+                    if (random.nextInt(1000) < 5) floor.setItem(new BuffPotion(gfx, assets.get("flask green")));
+                }
 
+            }
         }
     }
-}
-//    private void initFloor(GameAlgoritm random) {
-//        int x = cols/2;
-//        int y = rows/2;
-//        int count = 0;
-//        do {
-//            int dx = random.nextInt(-1, 2);
-//            int dy = random.nextInt(-1, 2);
-//
-//            if (dx != 0 || dy != 0) {
-//                x += dx;
-//                y += dy;
-//
-//                if (x >= 0 && x < cols && y >= 0 && y < rows) {
-//                    tiles[y][x] = new FloorTile(gfx, assets.get("floor"));
-//                    count++;
-//                }
-//            }
-//        } while (count != cols * rows);
-//    }
-
     private void initFloor(GameAlgoritm random) {
-            int x = cols/2;
-            int y = rows/2;
-            int count = 0;
-            while (count < rows*cols*1.5) {
-                int cx = random.nextInt(1, cols-1);
-                int cy = random.nextInt(1, rows-1);
+        int x = cols/2;
+        int y = rows/2;
+        int count = 0;
+        do {
+            int dx = random.nextInt(-1, 2);
+            int dy = random.nextInt(-1, 2);
 
+            if (dx != 0 || dy != 0) {
+                if (random.nextBoolean()) {
+                    x += dx;
+                }else {
+                    y += dy;
+                }
 
-                    if (random.nextBoolean()) {
-                        tiles[cy][cx+1] =  new FloorTile(gfx, assets.get("floor"));
-                    } else if (random.nextBoolean()) {
-                        tiles[cy][cx-1] =  new FloorTile(gfx, assets.get("floor"));
-                    } else if (random.nextBoolean()) {
-                        tiles[cy+1][cx] =  new FloorTile(gfx, assets.get("floor"));
-                    } else if (random.nextBoolean()) {
-                        tiles[cy-1][cx] =  new FloorTile(gfx, assets.get("floor"));
-                    }
-                count++;
+                if (x >= 0 && x < cols && y >= 0 && y < rows) {
+                    tiles[y][x] = new FloorTile(gfx, assets.get("floor"));
+                    count++;
+                }
+            }
+        } while (count != cols * rows*2);
+    }
+
+    //    private void initFloor(GameAlgoritm random) {
+//            int x = cols/2;
+//            int y = rows/2;
+//            int count = 0;
+//            while (count < rows*cols*1.5) {
+//                int cx = random.nextInt(1, cols-1);
+//                int cy = random.nextInt(1, rows-1);
+//
+//
+//                    if (random.nextBoolean()) {
+//                        tiles[cy][cx+1] =  new FloorTile(gfx, assets.get("floor"));
+//                    } else if (random.nextBoolean()) {
+//                        tiles[cy][cx-1] =  new FloorTile(gfx, assets.get("floor"));
+//                    } else if (random.nextBoolean()) {
+//                        tiles[cy+1][cx] =  new FloorTile(gfx, assets.get("floor"));
+//                    } else if (random.nextBoolean()) {
+//                        tiles[cy-1][cx] =  new FloorTile(gfx, assets.get("floor"));
+//                    }
+//                count++;
+//            }
+//        }
+    private void initWall() {
+        for (int r = 0; r < rows; r++) {
+            for (int c = 0; c < cols; c++) {
+                tiles[r][c] = new WallTile(gfx, assets.get("wall"));
             }
         }
-private void initWall() {
-    for (int r = 0; r < rows; r++) {
-        for (int c = 0; c < cols; c++) {
-            tiles[r][c] = new WallTile(gfx, assets.get("wall"));
-        }
     }
-}
     private int countFloors() {
         int count = 0;
         for (int r = 0; r < rows; r++) {
@@ -107,9 +110,9 @@ private void initWall() {
         }
         return count;
     }
-        public boolean isNotFloor(int x, int y) {
+    public boolean isNotFloor(int x, int y) {
         return (!(getTile(y, x) instanceof FloorTile));
-        }
+    }
     private void initKey(GameAlgoritm random) {
         int keyX;
         int keyY;
@@ -171,6 +174,6 @@ private void initWall() {
         tile = t;
     }
     public void clear() {
-       tiles = new Tile[rows][cols];
+        tiles = new Tile[rows][cols];
     }
 }
